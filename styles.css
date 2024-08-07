@@ -142,7 +142,7 @@ video {
 @media (max-height: 480px) and (orientation: landscape) {
     video {
         width: auto;
-        height: 90%;
+        height: 93%;
     }
 
     #startButton {
