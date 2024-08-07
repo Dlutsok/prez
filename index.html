@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="video-container">
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+            <p id="loadingText">Загрузка видео...</p>
+        </div>
+        <video id="videoPlayer" playsinline preload="auto">
+            <source id="videoSource" src="2.mp4" type="video/mp4">
+            Ваш браузер не поддерживает видео.
+        </video>
+        <button id="startButton" onclick="startVideo()">Воспроизвести видео</button>
+        <div class="controls">
+            <div class="control-panel">
+                <button class="arrow" onclick="prevSegment()">&#9664;</button>
+                <button class="arrow" onclick="nextSegment()">&#9654;</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    
+</body>
+</html>

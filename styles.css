@@ -1,0 +1,158 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: black;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+video {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.video-visible {
+    opacity: 1;
+}
+
+#startButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.progress-container {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    z-index: 1;
+}
+
+.progress-bar {
+    width: 100%;
+    background: #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 20px;
+    background: #76c7c0;
+    width: 0;
+    transition: width 0.25s;
+}
+
+.controls {
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.control-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.arrow {
+    color: black;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    user-select: none;
+    transition: background 0.3s;
+}
+
+.arrow:hover {
+    background: rgba(255, 133, 51, 0.9);
+}
+
+/* Медиа-запросы для адаптации под мобильные устройства */
+@media (max-width: 768px) {
+    video {
+        width: 100%;
+        height: auto;
+    }
+
+    #startButton {
+        font-size: 14px;
+    }
+
+    .controls {
+        padding: 5px;
+    }
+
+    .arrow {
+        padding: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    #startButton {
+        font-size: 12px;
+    }
+
+    .controls {
+        padding: 5px;
+    }
+
+    .arrow {
+        padding: 5px;
+    }
+}
+
+/* Медиа-запросы для горизонтальной ориентации */
+@media (max-height: 480px) and (orientation: landscape) {
+    video {
+        width: auto;
+        height: 100%;
+    }
+
+    #startButton {
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .controls {
+        bottom: auto;
+        top: 0;
+    }
+}
