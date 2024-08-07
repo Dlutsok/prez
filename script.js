@@ -18,7 +18,7 @@ function updateProgress() {
             const percentBuffered = (bufferedEnd / duration) * 100;
             progressBar.style.width = percentBuffered + '%';
             console.log(`Буферизация: ${percentBuffered}%`);
-            if (bufferedEnd >= 30) { // Если загружено 30 секунд
+            if (bufferedEnd >= 20) { // Если загружено 30 секунд
                 if (!buttonDisplayed) {
                     startButton.style.display = 'block'; // Показываем кнопку
                     loadingText.style.display = 'none'; // Скрываем текст загрузки
