@@ -84,7 +84,7 @@ function prevSegment() {
         currentSegmentIndex = segments.length - 1; // Переходим к последнему сегменту, если достигнут начало
     }
     videoPlayer.currentTime = segments[currentSegmentIndex];
-    videoPlayer.playф().catch(error => {
+    videoPlayer.play().catch(error => {
         console.error("Ошибка при попытке воспроизведения видео:", error);
     });
 }
