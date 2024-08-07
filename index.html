@@ -3,32 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Carousel</title>
+    <title>Video Player</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="video-container">
-        <!-- Прогресс-бар загрузки видео -->
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-bar">
-                <div class="progress-bar-fill" id="progressBar"></div>
-            </div>
-            <p id="loadingText">Загрузка видео...</p>
-        </div>
-        <!-- Видео плеер -->
-        <video id="videoPlayer" playsinline preload="auto" muted>
-            <source id="videoSource" src="1.mp4" type="video/mp4">
+        <video id="videoPlayer" playsinline preload="auto">
+            <source src="1.mp4" type="video/mp4">
             Ваш браузер не поддерживает видео.
         </video>
-        <!-- Элементы управления -->
         <div class="controls">
-            <div class="control-panel">
-                <button class="arrow" onclick="prevSegment()">&#9664;</button>
-                <button class="arrow" onclick="nextSegment()">&#9654;</button>
-            </div>
+            <button class="arrow" onclick="prevSegment()">&#9664;</button>
+            <button class="arrow" onclick="nextSegment()">&#9654;</button>
         </div>
-        <!-- Кнопка воспроизведения -->
-        <button id="startButton" onclick="startVideo()">Начать воспроизведение</button>
+        <button id="startButton" class="start-button">Запустить видео</button>
     </div>
     <script src="script.js"></script>
 </body>
