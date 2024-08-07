@@ -7,7 +7,6 @@ const loadingText = document.getElementById('loadingText');
 const progressContainer = document.getElementById('progressContainer');
 
 let buttonDisplayed = false;
-let videoStarted = false;
 
 function updateProgress() {
     if (videoPlayer.buffered.length > 0) {
@@ -37,9 +36,8 @@ videoPlayer.addEventListener('loadeddata', () => {
 });
 
 function startVideo() {
+    startButton.style.display = 'none'; // Скрываем кнопку сразу после нажатия
     videoPlayer.play().then(() => {
-        videoStarted = true;
-        startButton.style.display = 'none';
         requestAnimationFrame(updateVideo);
     }).catch(error => {
         console.error("Ошибка при попытке воспроизведения видео:", error);
@@ -47,8 +45,6 @@ function startVideo() {
 }
 
 function updateVideo() {
-    if (!videoStarted) return;
-
     const currentTime = videoPlayer.currentTime;
     const segmentEnd = segments[currentSegmentIndex] + (segments[currentSegmentIndex + 1] ? segments[currentSegmentIndex + 1] - segments[currentSegmentIndex] : videoPlayer.duration);
     
