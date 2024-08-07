@@ -19,7 +19,9 @@ function startVideo() {
 function playCurrentSegment() {
     if (videoPlayer.readyState >= 3) { // Проверяем, достаточно ли загружено видео
         videoPlayer.currentTime = segments[currentSegmentIndex];
-        videoPlayer.play().catch(error => {
+        videoPlayer.play().then(() => {
+            requestAnimationFrame(updateVideo); // Запускаем обновление видео
+        }).catch(error => {
             console.error("Ошибка при попытке воспроизведения видео:", error);
         });
     }
@@ -37,12 +39,6 @@ function updateVideo() {
 
     requestAnimationFrame(updateVideo); // Продолжаем обновление
 }
-
-// Запускаем обновление видео после нажатия на кнопку старта
-startButton.addEventListener('click', () => {
-    startVideo();
-    requestAnimationFrame(updateVideo); // Запускаем обновление видео
-});
 
 // Переключение на следующий сегмент
 function nextSegment() {
