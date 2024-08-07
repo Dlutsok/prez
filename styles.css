@@ -74,8 +74,6 @@ video {
 
 .controls {
     padding: 10px;
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
     position: absolute;
     bottom: 0;
@@ -95,9 +93,9 @@ video {
     border: none;
     cursor: pointer;
     padding: 10px;
-    border-radius: 50%;
     user-select: none;
     transition: background 0.3s;
+    height: 35px;
 }
 
 .arrow:hover {
@@ -153,7 +151,16 @@ video {
 
     .controls {
         bottom: auto;
-        top: 0;
+        justify-content: space-between;
+        width: 98%;
+    }
+
+    .control-panel {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .arrow {
+        padding: 10px;
     }
 }
-
