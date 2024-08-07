@@ -1,4 +1,4 @@
-const segments = [0, 10.5, 21.5, 32.5, 43, 53.5, 65, 75.5, 86, 96.5, 107, 117]; // Интервалы в секундах
+const segments = [0, 10.5, 21.5, 32.5, 43, 53.5, 65, 75.5, 86, 96.5, 107, 117];
 let currentSegmentIndex = 0;
 const videoPlayer = document.getElementById('videoPlayer');
 const startButton = document.getElementById('startButton');
@@ -13,28 +13,31 @@ videoPlayer.addEventListener('loadeddata', () => {
 });
 
 // Функция для старта воспроизведения видео
-function startVideo() {
+async function startVideo() {
     startButton.style.display = 'none'; // Скрываем кнопку старта
 
-    // Запуск буферизации в фоновом режиме
+    // Устанавливаем начальное время и загружаем данные
     videoPlayer.currentTime = 0;
-    videoPlayer.addEventListener('canplaythrough', playCurrentSegment);
 
-    // Загружаем данные для буферизации
-    videoPlayer.load();
+    // Ждем, пока видео загрузится и станет готовым для воспроизведения
+    await new Promise(resolve => {
+        videoPlayer.addEventListener('canplaythrough', resolve, { once: true });
+    });
+
+    playCurrentSegment();
 }
 
 // Функция для воспроизведения текущего сегмента
-function playCurrentSegment() {
-    videoPlayer.removeEventListener('canplaythrough', playCurrentSegment); // Удаляем обработчик события
-    videoPlayer.currentTime = segments[currentSegmentIndex];
-    videoPlayer.play().then(() => {
+async function playCurrentSegment() {
+    try {
+        videoPlayer.currentTime = segments[currentSegmentIndex];
+        await videoPlayer.play();
         isPlaying = true;
         console.log('Воспроизведение началось.');
-        requestAnimationFrame(updateVideo); // Запускаем обновление видео
-    }).catch(error => {
+        requestAnimationFrame(updateVideo);
+    } catch (error) {
         console.error("Ошибка при попытке воспроизведения видео:", error);
-    });
+    }
 }
 
 // Функция для обновления состояния видео
@@ -53,29 +56,27 @@ function updateVideo() {
         });
     }
 
-    requestAnimationFrame(updateVideo); // Продолжаем обновление
+    requestAnimationFrame(updateVideo);
 }
 
 // Переключение на следующий сегмент
-function nextSegment() {
-    currentSegmentIndex++;
-    if (currentSegmentIndex >= segments.length) {
-        currentSegmentIndex = 0; // Возвращаемся к началу массива, если достигнут конец
-    }
+async function nextSegment() {
+    currentSegmentIndex = (currentSegmentIndex + 1) % segments.length;
     videoPlayer.currentTime = segments[currentSegmentIndex];
-    videoPlayer.play().catch(error => {
+    try {
+        await videoPlayer.play();
+    } catch (error) {
         console.error("Ошибка при попытке воспроизведения видео:", error);
-    });
+    }
 }
 
 // Переключение на предыдущий сегмент
-function prevSegment() {
-    currentSegmentIndex--;
-    if (currentSegmentIndex < 0) {
-        currentSegmentIndex = segments.length - 1; // Переходим к последнему сегменту, если достигнут начало
-    }
+async function prevSegment() {
+    currentSegmentIndex = (currentSegmentIndex - 1 + segments.length) % segments.length;
     videoPlayer.currentTime = segments[currentSegmentIndex];
-    videoPlayer.play().catch(error => {
+    try {
+        await videoPlayer.play();
+    } catch (error) {
         console.error("Ошибка при попытке воспроизведения видео:", error);
-    });
+    }
 }
