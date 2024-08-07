@@ -95,7 +95,7 @@
             </div>
             <p>Загрузка видео...</p>
         </div>
-        <video id="videoPlayer" playsinline>
+        <video id="videoPlayer" playsinline preload="auto">
             <source id="videoSource" src="1.mp4" type="video/mp4">
             Ваш браузер не поддерживает видео.
         </video>
@@ -115,10 +115,10 @@
         const progressContainer = document.getElementById('progressContainer');
         let isPlaying = false;
 
-        videoPlayer.addEventListener('canplaythrough', () => {
-            // Скрываем прогресс-бар и показываем видео
+        videoPlayer.addEventListener('loadeddata', () => {
             progressContainer.style.display = 'none';
             videoPlayer.classList.add('video-visible');
+            playVideo();
         });
 
         videoPlayer.addEventListener('play', () => {
@@ -140,6 +140,18 @@
             }
         });
 
+        videoPlayer.addEventListener('waiting', () => {
+            console.log('Video is buffering...');
+        });
+
+        videoPlayer.addEventListener('canplaythrough', () => {
+            console.log('Video can play through');
+        });
+
+        videoPlayer.addEventListener('error', (e) => {
+            console.error('Error occurred:', e);
+        });
+
         function playVideo() {
             if (videoPlayer.readyState >= 3) { // Проверяем, достаточно ли загружено видео
                 videoPlayer.currentTime = segments[currentSegmentIndex];
@@ -153,7 +165,7 @@
         function nextSegment() {
             currentSegmentIndex++;
             if (currentSegmentIndex >= segments.length) {
-                currentSegmentIndex = segments.length - 1; // Не позволяем уходить за конец массива
+                currentSegmentIndex = segments.length - 1;
             }
             updateSegment();
         }
@@ -161,19 +173,19 @@
         function prevSegment() {
             currentSegmentIndex--;
             if (currentSegmentIndex < 0) {
-                currentSegmentIndex = 0; // Не позволяем уходить за начало массива
+                currentSegmentIndex = 0;
             }
             updateSegment();
         }
 
         function updateSegment() {
-            const segmentStart = segments[currentSegmentIndex];
-            videoPlayer.currentTime = segmentStart;
-            if (isPlaying) {
+            videoPlayer.currentTime = segments[currentSegmentIndex];
+            videoPlayer.pause();
+            videoPlayer.addEventListener('seeked', () => {
                 videoPlayer.play().catch(error => {
                     console.error("Error trying to play video:", error);
                 });
-            }
+            }, { once: true });
         }
 
         function updateVideo() {
@@ -187,12 +199,11 @@
                     });
                 }
             }
+            requestAnimationFrame(updateVideo);
         }
 
-        // Автоматически начинаем воспроизведение при загрузке страницы
-        window.addEventListener('load', () => {
-            playVideo();
-        });
+        // Запускаем обновление
+        updateVideo();
     </script>
 </body>
 </html>
