@@ -7,6 +7,7 @@ const loadingText = document.getElementById('loadingText');
 const progressContainer = document.getElementById('progressContainer');
 
 let buttonDisplayed = false;
+let videoStarted = false;
 
 function updateProgress() {
     if (videoPlayer.buffered.length > 0) {
@@ -16,7 +17,7 @@ function updateProgress() {
             const percentBuffered = (bufferedEnd / duration) * 100;
             progressBar.style.width = percentBuffered + '%';
             console.log(`Буферизация: ${percentBuffered}%`);
-            if (bufferedEnd >= 20) {
+            if (bufferedEnd >= 20 && !videoStarted) {
                 if (!buttonDisplayed) {
                     startButton.style.display = 'block';
                     loadingText.style.display = 'none';
@@ -37,6 +38,7 @@ videoPlayer.addEventListener('loadeddata', () => {
 
 function startVideo() {
     startButton.style.display = 'none'; // Скрываем кнопку сразу после нажатия
+    videoStarted = true; // Устанавливаем флаг, что видео началось
     videoPlayer.play().then(() => {
         requestAnimationFrame(updateVideo);
     }).catch(error => {
@@ -45,6 +47,8 @@ function startVideo() {
 }
 
 function updateVideo() {
+    if (!videoStarted) return;
+
     const currentTime = videoPlayer.currentTime;
     const segmentEnd = segments[currentSegmentIndex] + (segments[currentSegmentIndex + 1] ? segments[currentSegmentIndex + 1] - segments[currentSegmentIndex] : videoPlayer.duration);
     
