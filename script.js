@@ -6,8 +6,8 @@ const startButton = document.getElementById('startButton');
 const loadingText = document.getElementById('loadingText');
 const progressContainer = document.getElementById('progressContainer');
 
-// Переменная для отслеживания отображения кнопки
-let buttonDisplayed = false;
+// Переменная для отслеживания отображения ползунка
+let isProgressContainerVisible = false;
 
 // Функция для обновления ползунка загрузки
 function updateProgress() {
@@ -18,31 +18,34 @@ function updateProgress() {
             const percentBuffered = (bufferedEnd / duration) * 100;
             progressBar.style.width = percentBuffered + '%';
             console.log(`Буферизация: ${percentBuffered}%`);
-            if (bufferedEnd >= 20) { // Если загружено 30 секунд
-                if (!buttonDisplayed) {
-                    startButton.style.display = 'block'; // Показываем кнопку
-                    loadingText.style.display = 'none'; // Скрываем текст загрузки
+            if (bufferedEnd >= 20) { // Если загружено 20 секунд
+                if (isProgressContainerVisible) {
                     progressContainer.style.display = 'none'; // Скрываем ползунок
-                    buttonDisplayed = true; // Устанавливаем флаг, что кнопка уже показана
+                    isProgressContainerVisible = false; // Обновляем состояние, что ползунок скрыт
                 }
             }
         }
     }
-    requestAnimationFrame(updateProgress); // Продолжаем обновление ползунка
+    if (videoPlayer.readyState >= 3) {
+        requestAnimationFrame(updateProgress); // Продолжаем обновление ползунка
+    }
 }
 
 // При загрузке данных видео
 videoPlayer.addEventListener('loadeddata', () => {
     console.log('Данные видео загружены.');
     videoPlayer.classList.add('video-visible'); // Делаем видео видимым
-    requestAnimationFrame(updateProgress); // Запускаем обновление ползунка
+    startButton.style.display = 'block'; // Показываем кнопку воспроизведения
+    progressContainer.style.display = 'none'; // Ползунок скрыт до нажатия кнопки
 });
 
 // Функция для старта воспроизведения видео
 function startVideo() {
+    startButton.style.display = 'none'; // Скрываем кнопку старта после начала воспроизведения
+    progressContainer.style.display = 'block'; // Показываем ползунок загрузки
+    isProgressContainerVisible = true; // Устанавливаем флаг, что ползунок видим
     videoPlayer.play().then(() => {
-        startButton.style.display = 'none'; // Скрываем кнопку старта после начала воспроизведения
-        requestAnimationFrame(updateVideo); // Запускаем обновление видео
+        requestAnimationFrame(updateProgress); // Запускаем обновление ползунка
     }).catch(error => {
         console.error("Ошибка при попытке воспроизведения видео:", error);
     });
