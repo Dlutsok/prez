@@ -29,11 +29,11 @@
             width: 100%;
             object-fit: contain;
             object-position: center;
-            opacity: 1;
+            opacity: 0;
             transition: opacity 1s ease-in-out;
         }
-        .video-hidden {
-            opacity: 0;
+        .video-visible {
+            opacity: 1;
         }
         .controls {
             padding: 10px;
@@ -47,7 +47,6 @@
             width: 100%;
             z-index: 1;
         }
-
         .control-panel {
             display: flex;
             align-items: center;
@@ -66,35 +65,40 @@
         .arrow:hover {
             background: rgba(255, 133, 51, 0.9);
         }
-
-        .play-button {
+        .progress-container {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 2em;
             color: white;
-            background: rgba(0, 0, 0, 0.7);
-            border: none;
-            cursor: pointer;
-            padding: 20px;
-            border-radius: 50%;
-            z-index: 2;
-            user-select: none;
-            transition: background 0.3s;
+            text-align: center;
         }
-        .play-button:hover {
-            background: rgba(0, 0, 0, 0.9);
+        .progress-bar {
+            width: 100%;
+            background: #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 20px;
+            background: #76c7c0;
+            width: 0;
+            transition: width 0.25s;
         }
     </style>
 </head>
 <body>
     <div class="video-container">
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+            <p>Загрузка видео...</p>
+        </div>
         <video id="videoPlayer" playsinline>
             <source id="videoSource" src="1.mp4" type="video/mp4">
-            Your browser does not support the video tag.
+            Ваш браузер не поддерживает видео.
         </video>
-        <button class="play-button" onclick="playVideo()">Play</button>
         <div class="controls">
             <div class="control-panel">
                 <button class="arrow" onclick="prevSegment()">&#9664;</button>
@@ -107,18 +111,43 @@
         const segments = [0, 10.5, 21.5, 32.5, 43, 53.5, 65, 75.5, 86, 96.5, 107, 117]; // Ваши интервалы в секундах
         let currentSegmentIndex = 0;
         const videoPlayer = document.getElementById('videoPlayer');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
         let isPlaying = false;
 
-        function playVideo() {
-            const playButton = document.querySelector('.play-button');
-            playButton.style.display = 'none';
-            videoPlayer.play().catch(error => {
-                console.error("Error trying to play video:", error);
-            });
-            videoPlayer.currentTime = segments[currentSegmentIndex];
-            videoPlayer.play();
+        videoPlayer.addEventListener('canplaythrough', () => {
+            // Скрываем прогресс-бар и показываем видео
+            progressContainer.style.display = 'none';
+            videoPlayer.classList.add('video-visible');
+        });
+
+        videoPlayer.addEventListener('play', () => {
             isPlaying = true;
-            setInterval(updateVideo, 150); // Проверяем и обновляем текущий сегмент
+        });
+
+        videoPlayer.addEventListener('pause', () => {
+            isPlaying = false;
+        });
+
+        videoPlayer.addEventListener('progress', () => {
+            if (videoPlayer.buffered.length > 0) {
+                const bufferedEnd = videoPlayer.buffered.end(videoPlayer.buffered.length - 1);
+                const duration = videoPlayer.duration;
+                if (duration > 0) {
+                    const percentBuffered = (bufferedEnd / duration) * 100;
+                    progressBar.style.width = percentBuffered + '%';
+                }
+            }
+        });
+
+        function playVideo() {
+            if (videoPlayer.readyState >= 3) { // Проверяем, достаточно ли загружено видео
+                videoPlayer.currentTime = segments[currentSegmentIndex];
+                videoPlayer.play().catch(error => {
+                    console.error("Error trying to play video:", error);
+                });
+                isPlaying = true;
+            }
         }
 
         function nextSegment() {
@@ -159,6 +188,11 @@
                 }
             }
         }
+
+        // Автоматически начинаем воспроизведение при загрузке страницы
+        window.addEventListener('load', () => {
+            playVideo();
+        });
     </script>
 </body>
 </html>
