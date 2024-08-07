@@ -13,7 +13,7 @@
             <div class="progress-bar">
                 <div class="progress-bar-fill" id="progressBar"></div>
             </div>
-            <p>Загрузка видео...</p>
+            <p id="loadingText">Загрузка видео...</p>
         </div>
         <!-- Видео плеер -->
         <video id="videoPlayer" playsinline preload="auto" muted>
@@ -27,7 +27,7 @@
                 <button class="arrow" onclick="nextSegment()">&#9654;</button>
             </div>
         </div>
-        <!-- Кнопка старта -->
+        <!-- Кнопка воспроизведения -->
         <button id="startButton" onclick="startVideo()">Начать воспроизведение</button>
     </div>
     <script src="script.js"></script>
