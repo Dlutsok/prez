@@ -85,38 +85,21 @@ function prevSegment() {
     });
 }
 
-// Обработка изменений ориентации экрана
-window.addEventListener('orientationchange', () => {
+function handleOrientationChange() {
     if (window.innerHeight > window.innerWidth) {
         // Портретная ориентация
         videoPlayer.style.width = '100%';
         videoPlayer.style.height = 'auto';
     } else {
         // Альбомная ориентация
-        videoPlayer.style.width = '100%';
-        videoPlayer.style.height = 'auto';
+        videoPlayer.style.width = 'auto';
+        videoPlayer.style.height = '93%';
     }
-});
+}
 
+// Initial check and setup event listeners
 document.addEventListener('DOMContentLoaded', () => {
-    const videoPlayer = document.getElementById('videoPlayer');
-
-    function handleOrientationChange() {
-        if (window.innerHeight > window.innerWidth) {
-            // Portrait orientation
-            videoPlayer.style.width = '100%';
-            videoPlayer.style.height = 'auto';
-        } else {
-            // Landscape orientation
-            videoPlayer.style.width = 'auto';
-            videoPlayer.style.height = '93%';
-        }
-    }
-
-    // Initial check
     handleOrientationChange();
-
-    // Listen for orientation changes
     window.addEventListener('orientationchange', handleOrientationChange);
     window.addEventListener('resize', handleOrientationChange);
 });
