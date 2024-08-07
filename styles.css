@@ -129,11 +129,13 @@ video {
     }
 
     .controls {
-        padding: 5px;
+        left: 40%;
+        bottom: 25%;
     }
 
     .arrow {
-        padding: 5px;
+        padding: 10px;
+        border-radius: 5px;
     }
 }
 
@@ -163,5 +165,6 @@ video {
 
     .arrow {
         padding: 10px;
+        border-radius: 5px;
     }
 }
