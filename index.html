@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Carousel</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: black;
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        video {
+            width: 100%;
+            object-fit: contain;
+            object-position: center;
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+        }
+        .video-hidden {
+            opacity: 0;
+        }
+        .controls {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .control-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .arrow {
+            color: black;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            user-select: none;
+            transition: background 0.3s;
+        }
+        .arrow:hover {
+            background: rgba(255, 133, 51, 0.9);
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2em;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            cursor: pointer;
+            padding: 20px;
+            border-radius: 50%;
+            z-index: 2;
+            user-select: none;
+            transition: background 0.3s;
+        }
+        .play-button:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video id="videoPlayer" playsinline>
+            <source id="videoSource" src="1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <button class="play-button" onclick="playVideo()">Play</button>
+        <div class="controls">
+            <div class="control-panel">
+                <button class="arrow" onclick="prevSegment()">&#9664;</button>
+                <button class="arrow" onclick="nextSegment()">&#9654;</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const segments = [0, 10.5, 21.5, 32.5, 43, 53.5, 65, 75.5, 86, 96.5, 107, 117]; // Ваши интервалы в секундах
+        let currentSegmentIndex = 0;
+        const videoPlayer = document.getElementById('videoPlayer');
+        let isPlaying = false;
+
+        function playVideo() {
+            const playButton = document.querySelector('.play-button');
+            playButton.style.display = 'none';
+            videoPlayer.play().catch(error => {
+                console.error("Error trying to play video:", error);
+            });
+            videoPlayer.currentTime = segments[currentSegmentIndex];
+            videoPlayer.play();
+            isPlaying = true;
+            setInterval(updateVideo, 150); // Проверяем и обновляем текущий сегмент
+        }
+
+        function nextSegment() {
+            currentSegmentIndex++;
+            if (currentSegmentIndex >= segments.length) {
+                currentSegmentIndex = segments.length - 1; // Не позволяем уходить за конец массива
+            }
+            updateSegment();
+        }
+
+        function prevSegment() {
+            currentSegmentIndex--;
+            if (currentSegmentIndex < 0) {
+                currentSegmentIndex = 0; // Не позволяем уходить за начало массива
+            }
+            updateSegment();
+        }
+
+        function updateSegment() {
+            const segmentStart = segments[currentSegmentIndex];
+            videoPlayer.currentTime = segmentStart;
+            if (isPlaying) {
+                videoPlayer.play().catch(error => {
+                    console.error("Error trying to play video:", error);
+                });
+            }
+        }
+
+        function updateVideo() {
+            if (isPlaying) {
+                const currentTime = videoPlayer.currentTime;
+                const segmentEnd = segments[currentSegmentIndex] + (segments[currentSegmentIndex + 1] ? segments[currentSegmentIndex + 1] - segments[currentSegmentIndex] : videoPlayer.duration);
+                if (currentTime >= segmentEnd) {
+                    videoPlayer.currentTime = segments[currentSegmentIndex];
+                    videoPlayer.play().catch(error => {
+                        console.error("Error trying to play video:", error);
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>
