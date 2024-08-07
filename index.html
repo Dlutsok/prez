@@ -16,7 +16,7 @@
             <p>Загрузка видео...</p>
         </div>
         <!-- Видео плеер -->
-        <video id="videoPlayer" playsinline preload="auto">
+        <video id="videoPlayer" playsinline preload="auto" muted>
             <source id="videoSource" src="1.mp4" type="video/mp4">
             Ваш браузер не поддерживает видео.
         </video>
@@ -27,6 +27,8 @@
                 <button class="arrow" onclick="nextSegment()">&#9654;</button>
             </div>
         </div>
+        <!-- Кнопка старта -->
+        <button id="startButton" onclick="startVideo()">Начать воспроизведение</button>
     </div>
     <script src="script.js"></script>
 </body>

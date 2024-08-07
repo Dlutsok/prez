@@ -3,13 +3,13 @@ let currentSegmentIndex = 0;
 const videoPlayer = document.getElementById('videoPlayer');
 const progressBar = document.getElementById('progressBar');
 const progressContainer = document.getElementById('progressContainer');
+const startButton = document.getElementById('startButton');
 
 // При загрузке данных видео
 videoPlayer.addEventListener('loadeddata', () => {
     console.log('Данные видео загружены.');
     progressContainer.style.display = 'none'; // Скрываем прогресс-бар
     videoPlayer.classList.add('video-visible'); // Делаем видео видимым
-    playVideo(); // Начинаем воспроизведение видео
 });
 
 // При буферизации
@@ -25,15 +25,14 @@ videoPlayer.addEventListener('progress', () => {
     }
 });
 
-// Начало воспроизведения видео
-function playVideo() {
-    if (videoPlayer.readyState >= 3) { // Проверяем, достаточно ли загружено видео
-        videoPlayer.currentTime = segments[currentSegmentIndex]; // Устанавливаем текущее время на начало сегмента
-        videoPlayer.play().catch(error => {
-            console.error("Ошибка при попытке воспроизведения видео:", error);
-        });
+// Функция для старта воспроизведения видео
+function startVideo() {
+    videoPlayer.play().then(() => {
+        startButton.style.display = 'none'; // Скрываем кнопку старта после начала воспроизведения
         requestAnimationFrame(updateVideo); // Запускаем обновление видео
-    }
+    }).catch(error => {
+        console.error("Ошибка при попытке воспроизведения видео:", error);
+    });
 }
 
 // Функция для обновления состояния видео
