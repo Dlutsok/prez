@@ -2,7 +2,6 @@ const segments = [0, 10.5, 21.5, 32.5, 43, 53.5, 65, 75.5, 86, 96.5, 107, 117];
 let currentSegmentIndex = 0;
 const videoPlayer = document.getElementById('videoPlayer');
 const startButton = document.getElementById('startButton');
-const loadingText = document.getElementById('loadingText');
 
 let isPlaying = false;
 
@@ -51,9 +50,11 @@ function updateVideo() {
         // Переход к следующему сегменту или возврат к началу
         currentSegmentIndex = (currentSegmentIndex + 1) % segments.length;
         videoPlayer.currentTime = segments[currentSegmentIndex];
-        videoPlayer.play().catch(error => {
-            console.error("Ошибка при попытке воспроизведения видео:", error);
-        });
+        if (!videoPlayer.paused) {
+            videoPlayer.play().catch(error => {
+                console.error("Ошибка при попытке воспроизведения видео:", error);
+            });
+        }
     }
 
     requestAnimationFrame(updateVideo);
@@ -64,7 +65,9 @@ async function nextSegment() {
     currentSegmentIndex = (currentSegmentIndex + 1) % segments.length;
     videoPlayer.currentTime = segments[currentSegmentIndex];
     try {
-        await videoPlayer.play();
+        if (videoPlayer.paused) {
+            await videoPlayer.play();
+        }
     } catch (error) {
         console.error("Ошибка при попытке воспроизведения видео:", error);
     }
@@ -75,8 +78,13 @@ async function prevSegment() {
     currentSegmentIndex = (currentSegmentIndex - 1 + segments.length) % segments.length;
     videoPlayer.currentTime = segments[currentSegmentIndex];
     try {
-        await videoPlayer.play();
+        if (videoPlayer.paused) {
+            await videoPlayer.play();
+        }
     } catch (error) {
         console.error("Ошибка при попытке воспроизведения видео:", error);
     }
 }
+
+// Начать воспроизведение при нажатии на кнопку
+startButton.addEventListener('click', startVideo);
