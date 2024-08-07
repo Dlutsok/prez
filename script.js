@@ -1,13 +1,10 @@
-const segments = [0, 10.5, 21.5, 32.5, 43, 53.5, 65, 75.5, 86, 96.5, 107, 117]; // Временные метки для сегментов
-const preloadDuration = 60; // Количество секунд для предварительной загрузки (1 минута)
+const segments = [0, 10.5, 21.5, 32.5, 43, 53.5, 65, 75.5, 86, 96.5, 107, 117]; // Интервалы в секундах
 let currentSegmentIndex = 0;
 const videoPlayer = document.getElementById('videoPlayer');
 const progressBar = document.getElementById('progressBar');
 const progressContainer = document.getElementById('progressContainer');
-let isPlaying = false;
-let isPreloading = false;
 
-// Событие, когда данные видео загружены
+// При загрузке данных видео
 videoPlayer.addEventListener('loadeddata', () => {
     console.log('Данные видео загружены.');
     progressContainer.style.display = 'none'; // Скрываем прогресс-бар
@@ -15,19 +12,7 @@ videoPlayer.addEventListener('loadeddata', () => {
     playVideo(); // Начинаем воспроизведение видео
 });
 
-// Событие, когда видео начинает воспроизводиться
-videoPlayer.addEventListener('play', () => {
-    isPlaying = true;
-    console.log('Видео воспроизводится.');
-});
-
-// Событие, когда видео приостанавливается
-videoPlayer.addEventListener('pause', () => {
-    isPlaying = false;
-    console.log('Видео приостановлено.');
-});
-
-// Событие, когда обновляется буферизация
+// При буферизации
 videoPlayer.addEventListener('progress', () => {
     if (videoPlayer.buffered.length > 0) {
         const bufferedEnd = videoPlayer.buffered.end(videoPlayer.buffered.length - 1);
@@ -40,106 +25,54 @@ videoPlayer.addEventListener('progress', () => {
     }
 });
 
-// Событие, когда видео буферизируется
-videoPlayer.addEventListener('waiting', () => {
-    console.log('Видео буферизируется...');
-});
-
-// Событие, когда видео начинает воспроизводиться
-videoPlayer.addEventListener('playing', () => {
-    console.log('Видео воспроизводится.');
-});
-
-// Событие ошибки
-videoPlayer.addEventListener('error', (e) => {
-    console.error('Произошла ошибка:', e);
-});
-
-// Функция для предварительной загрузки видео
-function preloadVideo() {
-    if (isPreloading) return; // Если уже происходит предварительная загрузка, ничего не делать
-    isPreloading = true;
-
-    // Определяем следующий сегмент, который нужно загрузить
-    const nextSegmentIndex = currentSegmentIndex + 1;
-    if (nextSegmentIndex < segments.length) {
-        const nextSegmentStart = segments[nextSegmentIndex];
-        videoPlayer.currentTime = nextSegmentStart; // Устанавливаем время на начало следующего сегмента
-        videoPlayer.play().catch(error => {
-            console.error("Ошибка при попытке воспроизведения видео:", error);
-        });
-
-        videoPlayer.addEventListener('timeupdate', function onTimeUpdate() {
-            if (videoPlayer.currentTime >= nextSegmentStart + preloadDuration) {
-                videoPlayer.pause();
-                videoPlayer.removeEventListener('timeupdate', onTimeUpdate);
-                videoPlayer.currentTime = segments[currentSegmentIndex]; // Устанавливаем текущее время на начало текущего сегмента
-                videoPlayer.play().catch(error => {
-                    console.error("Ошибка при попытке воспроизведения видео:", error);
-                });
-                isPreloading = false;
-            }
-        });
-    } else {
-        isPreloading = false;
-    }
-}
-
-// Функция для начала воспроизведения видео
+// Начало воспроизведения видео
 function playVideo() {
     if (videoPlayer.readyState >= 3) { // Проверяем, достаточно ли загружено видео
-        preloadVideo(); // Предварительная загрузка видео
-        videoPlayer.currentTime = segments[currentSegmentIndex]; // Устанавливаем время начала сегмента
+        videoPlayer.currentTime = segments[currentSegmentIndex]; // Устанавливаем текущее время на начало сегмента
         videoPlayer.play().catch(error => {
             console.error("Ошибка при попытке воспроизведения видео:", error);
         });
-        isPlaying = true;
+        requestAnimationFrame(updateVideo); // Запускаем обновление видео
     }
 }
 
-// Функция для переключения на следующий сегмент
+// Функция для обновления состояния видео
+function updateVideo() {
+    const currentTime = videoPlayer.currentTime;
+    const segmentEnd = segments[currentSegmentIndex] + (segments[currentSegmentIndex + 1] ? segments[currentSegmentIndex + 1] - segments[currentSegmentIndex] : videoPlayer.duration);
+    
+    if (currentTime >= segmentEnd) {
+        // Переход к следующему сегменту или возврат к началу
+        currentSegmentIndex = (currentSegmentIndex + 1) % segments.length;
+        videoPlayer.currentTime = segments[currentSegmentIndex];
+        videoPlayer.play().catch(error => {
+            console.error("Ошибка при попытке воспроизведения видео:", error);
+        });
+    }
+    
+    requestAnimationFrame(updateVideo); // Продолжаем обновление
+}
+
+// Переключение на следующий сегмент
 function nextSegment() {
     currentSegmentIndex++;
     if (currentSegmentIndex >= segments.length) {
-        currentSegmentIndex = segments.length - 1; // Не позволяем уходить за конец массива
+        currentSegmentIndex = 0; // Возвращаемся к началу массива, если достигнут конец
     }
-    updateSegment(); // Обновляем сегмент
+    videoPlayer.currentTime = segments[currentSegmentIndex];
+    videoPlayer.play().catch(error => {
+        console.error("Ошибка при попытке воспроизведения видео:", error);
+    });
 }
 
-// Функция для переключения на предыдущий сегмент
+// Переключение на предыдущий сегмент
 function prevSegment() {
     currentSegmentIndex--;
     if (currentSegmentIndex < 0) {
-        currentSegmentIndex = 0; // Не позволяем уходить за начало массива
+        currentSegmentIndex = segments.length - 1; // Переходим к последнему сегменту, если достигнут начало
     }
-    updateSegment(); // Обновляем сегмент
+    videoPlayer.currentTime = segments[currentSegmentIndex];
+    videoPlayer.play().catch(error => {
+        console.error("Ошибка при попытке воспроизведения видео:", error);
+    });
 }
-
-// Функция для обновления текущего сегмента
-function updateSegment() {
-    const segmentStart = segments[currentSegmentIndex];
-    videoPlayer.currentTime = segmentStart; // Устанавливаем текущее время на начало сегмента
-    if (isPlaying) {
-        videoPlayer.play().catch(error => {
-            console.error("Ошибка при попытке воспроизведения видео:", error);
-        });
-    }
-}
-
-// Функция для проверки и обновления состояния видео
-function updateVideo() {
-    if (isPlaying) {
-        const currentTime = videoPlayer.currentTime;
-        const segmentEnd = segments[currentSegmentIndex] + (segments[currentSegmentIndex + 1] ? segments[currentSegmentIndex + 1] - segments[currentSegmentIndex] : videoPlayer.duration);
-        if (currentTime >= segmentEnd) {
-            videoPlayer.currentTime = segments[currentSegmentIndex]; // Перематываем видео к началу сегмента
-            videoPlayer.play().catch(error => {
-                console.error("Ошибка при попытке воспроизведения видео:", error);
-            });
-        }
-    }
-    requestAnimationFrame(updateVideo); // Запускаем следующий цикл проверки
-}
-
-// Запускаем обновление состояния видео
-updateVideo();

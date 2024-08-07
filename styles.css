@@ -12,8 +12,8 @@ body, html {
 
 .video-container {
     position: relative;
-    width: 80%; /* Изменил ширину для лучшего отображения элементов управления */
-    height: 80%; /* Изменил высоту для лучшего отображения элементов управления */
+    width: 80%;
+    height: 80%;
     display: flex;
     flex-direction: column;
     align-items: center;
