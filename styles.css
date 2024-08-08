@@ -98,24 +98,9 @@ video {
     height: 35px;
 }
 
+
 .arrow:hover {
     background: rgba(255, 133, 51, 0.9);
-}
-
-#newButton {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #fff;
-    border: none;
-    border-radius: 5px;
-    position: absolute;
-    z-index: 2;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    text-decoration: none;
-    color: black;
 }
 
 /* Медиа-запросы для адаптации под мобильные устройства */
@@ -136,10 +121,6 @@ video {
     .arrow {
         padding: 5px;
     }
-
-    #newButton {
-        font-size: 14px;
-    }
 }
 
 @media (max-width: 480px) {
@@ -155,10 +136,6 @@ video {
     .arrow {
         padding: 10px;
         border-radius: 5px;
-    }
-
-    #newButton {
-        font-size: 12px;
     }
 }
 
@@ -189,11 +166,5 @@ video {
     .arrow {
         padding: 10px;
         border-radius: 5px;
-    }
-
-    #newButton {
-        bottom: 4%;
-        left: 10px;
-        transform: none;
     }
 }
