@@ -47,19 +47,6 @@ video {
     transform: translate(-50%, -50%);
 }
 
-#bottomButton {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #f0f0f0;
-    border: none;
-    border-radius: 5px;
-    position: absolute;
-    z-index: 2;
-    bottom: 10px;
-    padding: 10px 100px;
-}
-
 .progress-container {
     display: none;
     position: absolute;
@@ -115,6 +102,22 @@ video {
     background: rgba(255, 133, 51, 0.9);
 }
 
+#newButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
+    position: absolute;
+    z-index: 2;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-decoration: none;
+    color: black;
+}
+
 /* Медиа-запросы для адаптации под мобильные устройства */
 @media (max-width: 768px) {
     video {
@@ -126,10 +129,6 @@ video {
         font-size: 14px;
     }
 
-    #bottomButton {
-        font-size: 14px;
-    }
-
     .controls {
         padding: 5px;
     }
@@ -137,14 +136,14 @@ video {
     .arrow {
         padding: 5px;
     }
+
+    #newButton {
+        font-size: 14px;
+    }
 }
 
 @media (max-width: 480px) {
     #startButton {
-        font-size: 12px;
-    }
-
-    #bottomButton {
         font-size: 12px;
     }
 
@@ -156,6 +155,10 @@ video {
     .arrow {
         padding: 10px;
         border-radius: 5px;
+    }
+
+    #newButton {
+        font-size: 12px;
     }
 }
 
@@ -170,12 +173,6 @@ video {
         top: 10px;
         left: 50%;
         transform: translateX(-50%);
-    }
-
-    #bottomButton {
-        bottom: 10px;
-        left: 10px;
-        transform: translateX(0);
     }
 
     .controls {
@@ -193,13 +190,10 @@ video {
         padding: 10px;
         border-radius: 5px;
     }
-}
 
-/* Медиа-запросы для вертикальной ориентации */
-@media (min-height: 481px) and (orientation: portrait) {
-    #bottomButton {
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
+    #newButton {
+        bottom: 4%;
+        left: 10px;
+        transform: none;
     }
 }
