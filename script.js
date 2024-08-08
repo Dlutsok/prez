@@ -5,9 +5,12 @@ const progressBar = document.getElementById('progressBar');
 const startButton = document.getElementById('startButton');
 const loadingText = document.getElementById('loadingText');
 const progressContainer = document.getElementById('progressContainer');
+const nextButton = document.getElementById('nextButton');
+const prevButton = document.getElementById('prevButton');
 
 let buttonDisplayed = false;
 let videoStarted = false;
+let isPaused = false;
 
 function updateProgress() {
     if (videoPlayer.buffered.length > 0) {
@@ -47,20 +50,32 @@ function startVideo() {
 }
 
 function updateVideo() {
-    if (!videoStarted) return;
+    if (!videoStarted || isPaused) return;
 
     const currentTime = videoPlayer.currentTime;
     const segmentEnd = segments[currentSegmentIndex] + (segments[currentSegmentIndex + 1] ? segments[currentSegmentIndex + 1] - segments[currentSegmentIndex] : videoPlayer.duration);
-    
+
     if (currentTime >= segmentEnd) {
-        currentSegmentIndex = (currentSegmentIndex + 1) % segments.length;
-        videoPlayer.currentTime = segments[currentSegmentIndex];
-        videoPlayer.play().catch(error => {
-            console.error("Ошибка при попытке воспроизведения видео:", error);
-        });
+        pauseVideo();
     }
-    
+
     requestAnimationFrame(updateVideo);
+}
+
+function pauseVideo() {
+    isPaused = true;
+    videoPlayer.pause();
+    nextButton.style.display = 'block';
+    prevButton.style.display = 'block';
+}
+
+function resumeVideo() {
+    isPaused = false;
+    videoPlayer.play().catch(error => {
+        console.error("Ошибка при попытке воспроизведения видео:", error);
+    });
+    nextButton.style.display = 'none';
+    prevButton.style.display = 'none';
 }
 
 function nextSegment() {
@@ -69,9 +84,7 @@ function nextSegment() {
         currentSegmentIndex = 0;
     }
     videoPlayer.currentTime = segments[currentSegmentIndex];
-    videoPlayer.play().catch(error => {
-        console.error("Ошибка при попытке воспроизведения видео:", error);
-    });
+    resumeVideo();
 }
 
 function prevSegment() {
@@ -80,9 +93,7 @@ function prevSegment() {
         currentSegmentIndex = segments.length - 1;
     }
     videoPlayer.currentTime = segments[currentSegmentIndex];
-    videoPlayer.play().catch(error => {
-        console.error("Ошибка при попытке воспроизведения видео:", error);
-    });
+    resumeVideo();
 }
 
 function handleOrientationChange() {
@@ -102,4 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     handleOrientationChange();
     window.addEventListener('orientationchange', handleOrientationChange);
     window.addEventListener('resize', handleOrientationChange);
+
+    nextButton.addEventListener('click', nextSegment);
+    prevButton.addEventListener('click', prevSegment);
 });
