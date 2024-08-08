@@ -148,7 +148,7 @@ video {
     }
 
     .controls {
-        left: 40%;
+        left: 38%;
         bottom: 25%;
     }
 
@@ -159,6 +159,8 @@ video {
 
     #newButton {
         font-size: 12px;
+        padding: 10px 100px;
+        bottom: 15%;
     }
 }
 
