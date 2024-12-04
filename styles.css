@@ -1,3 +1,7 @@
+* {
+    font-family: 'ROBOTO', Arial, Helvetica, sans-serif;
+    font-weight: 400;
+}
 body, html {
     margin: 0;
     padding: 0;
@@ -37,7 +41,8 @@ video {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #fff;
+    color: #fff;
+    background-color: #005493;
     border: none;
     border-radius: 5px;
     position: absolute;
@@ -45,6 +50,12 @@ video {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    border-radius: 45px;
+}
+
+#startButton:hover {
+    background: rgba(255, 255, 255, 0.9);
+    color: #005493;
 }
 
 .progress-container {
@@ -96,10 +107,15 @@ video {
     user-select: none;
     transition: background 0.3s;
     height: 35px;
+    border-radius: 8px;
+    color: white;
+    background-color: #005493;
+    
 }
 
 .arrow:hover {
-    background: rgba(255, 133, 51, 0.9);
+    background: rgba(255, 255, 255, 0.9);
+    color: #005493;
 }
 
 #newButton {
@@ -115,8 +131,16 @@ video {
     left: 50%;
     transform: translateX(-50%);
     text-decoration: none;
-    color: black;
+    color: #005493;
+    border-radius: 45px;
 }
+
+
+#newButton:hover {
+    background: #005493;
+    color: white;;
+}
+
 
 /* Медиа-запросы для адаптации под мобильные устройства */
 @media (max-width: 768px) {
