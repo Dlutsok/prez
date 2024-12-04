@@ -11,7 +11,7 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: black;
+    background: rgb(255, 255, 255);
 }
 
 .video-container {
@@ -113,16 +113,18 @@ video {
     
 }
 
-.arrow:hover {
-    background: rgba(255, 255, 255, 0.9);
-    color: #005493;
+
+
+.arrow:active {
+    background: rgba(255, 255, 255, 0.7); /* Более светлый фон */
+    color: #003366; /* Более темный текст */
 }
 
 #newButton {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #fff;
+    background-color: #005493;
     border: none;
     border-radius: 5px;
     position: absolute;
@@ -131,14 +133,14 @@ video {
     left: 50%;
     transform: translateX(-50%);
     text-decoration: none;
-    color: #005493;
+    color: #ffffff;
     border-radius: 45px;
 }
 
 
 #newButton:hover {
-    background: #005493;
-    color: white;;
+    background-color: white;
+    color: #005493;
 }
 
 
