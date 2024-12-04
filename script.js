@@ -1,5 +1,6 @@
-const segments = [0, 25, 31, 36, 54];
+const segments = [0, 24, 31, 36, 54];
 let currentSegmentIndex = 0;
+
 const videoPlayer = document.getElementById('videoPlayer');
 const progressBar = document.getElementById('progressBar');
 const startButton = document.getElementById('startButton');
@@ -42,6 +43,7 @@ videoPlayer.addEventListener('loadeddata', () => {
 function startVideo() {
     startButton.style.display = 'none'; // Скрываем кнопку сразу после нажатия
     videoStarted = true; // Устанавливаем флаг, что видео началось
+    videoPlayer.currentTime = segments[currentSegmentIndex]; // Переходим к текущему сегменту
     videoPlayer.play().then(() => {
         requestAnimationFrame(updateVideo);
     }).catch(error => {
@@ -53,10 +55,12 @@ function updateVideo() {
     if (!videoStarted || isPaused) return;
 
     const currentTime = videoPlayer.currentTime;
-    const segmentEnd = segments[currentSegmentIndex] + (segments[currentSegmentIndex + 1] ? segments[currentSegmentIndex + 1] - segments[currentSegmentIndex] : videoPlayer.duration);
+    const segmentEnd = segments[currentSegmentIndex + 1] || videoPlayer.duration;
 
+    // Проверка на окончание сегмента
     if (currentTime >= segmentEnd) {
         pauseVideo();
+        return; // Завершаем выполнение, чтобы избежать продолжения воспроизведения
     }
 
     requestAnimationFrame(updateVideo);
@@ -84,6 +88,8 @@ function nextSegment() {
         currentSegmentIndex = 0;
     }
     videoPlayer.currentTime = segments[currentSegmentIndex];
+    isPaused = false; // Сбрасываем флаг паузы
+    updateVideo(); // Запускаем отслеживание сегмента
     resumeVideo();
 }
 
@@ -93,6 +99,8 @@ function prevSegment() {
         currentSegmentIndex = segments.length - 1;
     }
     videoPlayer.currentTime = segments[currentSegmentIndex];
+    isPaused = false; // Сбрасываем флаг паузы
+    updateVideo(); // Запускаем отслеживание сегмента
     resumeVideo();
 }
 
@@ -116,4 +124,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     nextButton.addEventListener('click', nextSegment);
     prevButton.addEventListener('click', prevSegment);
+    startButton.addEventListener('click', startVideo);
 });
