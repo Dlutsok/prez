@@ -1,4 +1,4 @@
-const segments = [0, 10.5, 21.5, 32.5, 43, 53.5, 65, 75.5, 86, 96.5, 107, 117];
+const segments = [0, 25, 31, 36, 54];
 let currentSegmentIndex = 0;
 const videoPlayer = document.getElementById('videoPlayer');
 const progressBar = document.getElementById('progressBar');
