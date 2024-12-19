@@ -1,4 +1,4 @@
-const segments = [0, 24, 28, 33, 37.5, 42, 46.5, 52, 57, 63, 69, 75, 80, 97, 126, 137, 163, ];
+const segments = [0, 24, 28, 33, 37.5, 42, 46.5, 52, 57, 63, 69, 75, 80, 97, 126, 137, 163 ];
 let currentSegmentIndex = 0;
 
 const videoPlayer = document.getElementById('videoPlayer');
