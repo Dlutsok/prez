@@ -1,4 +1,4 @@
-const segments = [0, 23.5, 31, 35.5, 54, 73, 78, 83, 87, 91, 96, 100, 105, 113, 119, 125, 143, 173, 184, 211, ];
+const segments = [0, 25, 28, 35, 52, 70, 73, 76, 78, 80, 84, 86, 89, 91, 94, 98, 116, 144, 148, 173, ];
 let currentSegmentIndex = 0;
 
 const videoPlayer = document.getElementById('videoPlayer');
@@ -126,4 +126,5 @@ document.addEventListener('DOMContentLoaded', () => {
     prevButton.addEventListener('click', prevSegment);
     startButton.addEventListener('click', startVideo);
 });
+
 
